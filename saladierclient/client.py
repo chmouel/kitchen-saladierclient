@@ -46,7 +46,7 @@ def _get_endpoint(client, **kwargs):
         attr = 'region'
         filter_value = kwargs.get('region_name')
     return client.service_catalog.url_for(
-        service_type=kwargs.get('service_type') or 'baremetal',
+        service_type=kwargs.get('service_type') or 'ci',
         attr=attr,
         filter_value=filter_value,
         endpoint_type=kwargs.get('endpoint_type') or 'publicURL')

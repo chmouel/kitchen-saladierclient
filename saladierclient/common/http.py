@@ -362,9 +362,8 @@ class ResponseBodyIterator(object):
 def _construct_http_client(*args, **kwargs):
     session = kwargs.pop('session', None)
     auth = kwargs.pop('auth', None)
-
     if session:
-        service_type = kwargs.pop('service_type', 'baremetal')
+        service_type = kwargs.pop('service_type', 'ci')
         interface = kwargs.pop('endpoint_type', None)
         region_name = kwargs.pop('region_name', None)
         return SessionClient(session=session,

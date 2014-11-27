@@ -21,6 +21,7 @@ from __future__ import print_function
 import argparse
 import getpass
 import logging
+import os
 import sys
 
 import httplib2
@@ -193,7 +194,7 @@ class SaladierShell(object):
         parser.add_argument('--os-service-type',
                             default=cliutils.env('OS_SERVICE_TYPE'),
                             help='Defaults to env[OS_SERVICE_TYPE] or '
-                                 '"baremetal"')
+                                 '"ci"')
 
         parser.add_argument('--os_service_type',
                             help=argparse.SUPPRESS)
@@ -402,7 +403,7 @@ class SaladierShell(object):
                                        "env[OS_AUTH_URL]")
 
         endpoint = args.saladier_url
-        service_type = args.os_service_type or 'baremetal'
+        service_type = args.os_service_type or 'ci'
         project_id = args.os_project_id or args.os_tenant_id
         project_name = args.os_project_name or args.os_tenant_name
 
@@ -485,9 +486,13 @@ def main():
     try:
         SaladierShell().main(sys.argv[1:])
     except KeyboardInterrupt:
+        if os.environ.get("SALADIERCLIENT_DEBUG"):
+            raise
         print("... terminating saladier client", file=sys.stderr)
         sys.exit(130)
     except Exception as e:
+        if os.environ.get("SALADIERCLIENT_DEBUG"):
+            raise
         print(str(e), file=sys.stderr)
         sys.exit(1)
 

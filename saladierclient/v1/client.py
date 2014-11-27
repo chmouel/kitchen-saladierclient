@@ -16,6 +16,7 @@
 #    under the License.
 
 from saladierclient.common import http
+from saladierclient.v1 import products
 
 
 class Client(object):
@@ -31,3 +32,4 @@ class Client(object):
     def __init__(self, *args, **kwargs):
         """Initialize a new client for the Ironic v1 API."""
         self.http_client = http._construct_http_client(*args, **kwargs)
+        self.products = products.ProductsManager(self.http_client)

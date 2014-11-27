@@ -14,8 +14,10 @@
 
 
 from saladierclient.common import utils
+from saladierclient.v1 import products_shell
 
 COMMAND_MODULES = [
+    products_shell,
 ]
 
 

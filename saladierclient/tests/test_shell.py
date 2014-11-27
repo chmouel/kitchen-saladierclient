@@ -197,7 +197,7 @@ class TestCase(testtools.TestCase):
 
     def register_keystone_v2_token_fixture(self):
         v2_token = ks_v2_fixture.Token(token_id=self.tokenid)
-        service = v2_token.add_service('baremetal')
+        service = v2_token.add_service('ci')
         service.add_endpoint('http://saladier.example.com', region='RegionOne')
         httpretty.register_uri(
             httpretty.POST,
@@ -206,7 +206,7 @@ class TestCase(testtools.TestCase):
 
     def register_keystone_v3_token_fixture(self):
         v3_token = ks_v3_fixture.Token()
-        service = v3_token.add_service('baremetal')
+        service = v3_token.add_service('ci')
         service.add_standard_endpoints(public='http://saladier.example.com')
         httpretty.register_uri(
             httpretty.POST,
