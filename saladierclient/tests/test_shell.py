@@ -31,6 +31,8 @@ from saladierclient import exc
 from saladierclient import shell as saladier_shell
 from saladierclient.tests import keystone_client_fixtures
 from saladierclient.tests import utils
+from saladierclient.tests.v1 import fakes
+
 
 FAKE_ENV = {'OS_USERNAME': 'username',
             'OS_PASSWORD': 'password',
@@ -245,7 +247,7 @@ class ShellTestNoMox(TestCase):
     @httpretty.activate
     def test_products_list(self):
         self.register_keystone_auth_fixture()
-        resp_dict = {"products": {"product1": ["1.0"]}}
+        resp_dict = fakes.PRODUCTS_LIST
         httpretty.register_uri(
             httpretty.GET,
             'http://saladier.example.com/v1/products',
@@ -253,14 +255,133 @@ class ShellTestNoMox(TestCase):
             content_type='application/json; charset=UTF-8',
             body=json.dumps(resp_dict))
 
-        event_list_text = self.shell('product-list')
-
+        text = self.shell('product-list')
         required = [
-            'product1',
-            '1.0',
+            fakes.PRODUCT1_NAME,
+            fakes.PRODUCT2_NAME,
+            fakes.PRODUCT1_ID,
+            fakes.PRODUCT2_ID,
         ]
         for r in required:
-            self.assertRegexpMatches(event_list_text, r)
+            self.assertRegexpMatches(text, r)
+
+    @httpretty.activate
+    def test_products_create(self):
+        self.register_keystone_auth_fixture()
+        httpretty.register_uri(
+            httpretty.POST,
+            'http://saladier.example.com/v1/products',
+            status=201,
+            content_type='application/json; charset=UTF-8',
+            body='{}')
+
+        text = self.shell('product-create foo1 team1 team@blah.org')
+        self.assertRegexpMatches(text, 'CREATED')
+
+    @httpretty.activate
+    def test_product_show(self):
+        self.register_keystone_auth_fixture()
+        httpretty.register_uri(
+            httpretty.GET,
+            'http://saladier.example.com/v1/products/' + fakes.PRODUCT1_NAME,
+            status=201,
+            content_type='application/json; charset=UTF-8',
+            body=json.dumps(fakes.PRODUCT1_DETAIL))
+
+        text = self.shell('product-show ' + fakes.PRODUCT1_NAME)
+        required = [
+            "%s:%s" % (fakes.VERSION1_NAME, fakes.VERSION1_ID),
+            fakes.PRODUCT1_CONTACT,
+            fakes.PRODUCT1_NAME,
+            fakes.PRODUCT1_TEAM,
+        ]
+        for r in required:
+            self.assertRegexpMatches(text, r)
+
+    @httpretty.activate
+    def test_product_show_version(self):
+        self.register_keystone_auth_fixture()
+        httpretty.register_uri(
+            httpretty.GET,
+            'http://saladier.example.com/v1/products/foobar/1.0',
+            status=201,
+            content_type='application/json; charset=UTF-8',
+            body=json.dumps(fakes.PRODUCT1_DETAIL))
+
+        text = self.shell('product-show -v 1.0 foobar')
+        self.assertRegexpMatches(text, "ready_for_deploy")
+
+    @httpretty.activate
+    def test_product_version_create(self):
+        self.register_keystone_auth_fixture()
+        httpretty.register_uri(
+            httpretty.POST,
+            'http://saladier.example.com/v1/versions',
+            status=201,
+            content_type='application/json; charset=UTF-8',
+            body='{}')
+
+        text = self.shell('product-versions-create foo1 http://bl 1.0')
+        self.assertRegexpMatches(text, 'CREATED')
+
+    @httpretty.activate
+    def test_version_show(self):
+        self.register_keystone_auth_fixture()
+        httpretty.register_uri(
+            httpretty.GET,
+            'http://saladier.example.com/',
+            status=201,
+            content_type='application/json; charset=UTF-8',
+            body=json.dumps(fakes.SERVER_VERSION_INFO))
+
+        text = self.shell('version')
+        for r in fakes.SERVER_VERSION_INFO.values():
+            self.assertRegexpMatches(text, r)
+
+    @httpretty.activate
+    def test_platforms_list(self):
+        self.register_keystone_auth_fixture()
+        resp_dict = dict(tenant_id='',
+                         contact='name@name.org',
+                         name='Platform1',
+                         location='Nothere')
+        httpretty.register_uri(
+            httpretty.GET,
+            'http://saladier.example.com/v1/platforms',
+            status=200,
+            content_type='application/json; charset=UTF-8',
+            body=json.dumps(dict(platforms=[resp_dict])))
+
+        text = self.shell('platforms-list')
+        for r in resp_dict.values():
+            self.assertRegexpMatches(text, r)
+
+    @httpretty.activate
+    def test_platform_create(self):
+        self.register_keystone_auth_fixture()
+        httpretty.register_uri(
+            httpretty.POST,
+            'http://saladier.example.com/v1/platforms',
+            status=201,
+            content_type='application/json; charset=UTF-8',
+            body='{}')
+
+        text = self.shell('platform-create Platform1 '
+                          '10100100200202020 name@name.org FarFarAway')
+        self.assertRegexpMatches(text, 'CREATED')
+
+    @httpretty.activate
+    def test_subscriptions_create(self):
+        self.register_keystone_auth_fixture()
+        httpretty.register_uri(
+            httpretty.POST,
+            'http://saladier.example.com/v1/subscriptions',
+            status=201,
+            content_type='application/json; charset=UTF-8',
+            body='{}')
+
+        text = self.shell('subscription-create name tenant_id')
+        self.assertRegexpMatches(text, 'CREATED')
 
 
 class ShellTestNoMoxV3(ShellTestNoMox):

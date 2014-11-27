@@ -68,8 +68,8 @@ class Manager(object):
                          limit=None):
         """Retrieve a list of items.
 
-        The Ironic API is configured to return a maximum number of
-        items per request, (see Ironic's api.max_limit option). This
+        The Saladier API is configured to return a maximum number of
+        items per request, (see Saladier's api.max_limit option). This
         iterates over the 'next' link (pagination) in the responses,
         to get the number of items specified by 'limit'. If 'limit'
         is None this function will continue pagination until there are

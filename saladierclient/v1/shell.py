@@ -14,10 +14,18 @@
 
 
 from saladierclient.common import utils
+from saladierclient.v1 import platforms_shell
+from saladierclient.v1 import product_version_shell
 from saladierclient.v1 import products_shell
+from saladierclient.v1 import subscriptions_shell
+from saladierclient.v1 import version_shell
 
 COMMAND_MODULES = [
     products_shell,
+    product_version_shell,
+    version_shell,
+    platforms_shell,
+    subscriptions_shell,
 ]
 
 

@@ -16,11 +16,15 @@
 #    under the License.
 
 from saladierclient.common import http
+from saladierclient.v1 import platforms
+from saladierclient.v1 import product_version
 from saladierclient.v1 import products
+from saladierclient.v1 import subscriptions
+from saladierclient.v1 import version
 
 
 class Client(object):
-    """Client for the Ironic v1 API.
+    """Client for the Saladier v1 API.
 
     :param string endpoint: A user-supplied endpoint URL for the ironic
                             service.
@@ -30,6 +34,13 @@ class Client(object):
     """
 
     def __init__(self, *args, **kwargs):
-        """Initialize a new client for the Ironic v1 API."""
+        """Initialize a new client for the Saladier v1 API."""
         self.http_client = http._construct_http_client(*args, **kwargs)
+        self.version = version.VersionManager(self.http_client)
+
         self.products = products.ProductsManager(self.http_client)
+        self.product_versions = product_version.ProductVersionManager(
+            self.http_client)
+        self.platforms = platforms.PlatformsManager(self.http_client)
+        self.subscriptions = subscriptions.SubscriptionsManager(
+            self.http_client)

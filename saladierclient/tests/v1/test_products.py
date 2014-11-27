@@ -16,27 +16,41 @@ import testtools
 
 from saladierclient import exc
 from saladierclient.tests import utils
+from saladierclient.tests.v1 import fakes
 import saladierclient.v1.products
 
-PRODUCT = {
-    "product1": ["1.0"],
-    "product2": ["1.1", "1.0"],
-}
-
-CREATE_PRODUCT = {'contact': "blah@blah.com",
-                  'name': 'product1',
-                  'team': 'thebestone'}
 
 fake_responses = {
     '/v1/products':
     {
         'GET': (
             {},
-            {"products": [PRODUCT]},
+            fakes.PRODUCTS_LIST,
         ),
         'POST': (
             {},
-            CREATE_PRODUCT,
+            fakes.CREATE_PRODUCT,
+        ),
+    },
+    '/v1/products/product1':
+    {
+        'GET': (
+            {},
+            fakes.PRODUCT1_DETAIL,
+        ),
+    },
+    '/v1/products/product1/1.0':
+    {
+        'GET': (
+            {},
+            fakes.VERSION1_DETAIL,
+        ),
+    },
+    '/v1/products/none':
+    {
+        'GET': (
+            {},
+            {},
         ),
     },
 }
@@ -54,17 +68,47 @@ class ProductsTest(testtools.TestCase):
         expect = [
             ('GET', '/v1/products', {}, None),
         ]
+
         self.assertEqual(expect, self.api.calls)
         self.assertEqual(2, len(products))
 
-    def test_create(self):
-        product = self.mgr.create(**CREATE_PRODUCT)
+    def test_products_get(self):
+        name = 'product1'
+        product = self.mgr.get(name)
         expect = [
-            ('POST', '/v1/products', {}, CREATE_PRODUCT),
+            ('GET', '/v1/products/' + name, {}, None),
+        ]
+        self.assertEqual(expect, self.api.calls)
+        self.assertDictEqual(fakes.PRODUCT1_DETAIL, product.to_dict())
+
+    def test_products_get_version(self):
+        name = 'product1'
+        version = '1.0'
+        product = self.mgr.get(name, version)
+        expect = [
+            ('GET', '/v1/products/' + name + "/" + version, {}, None),
+        ]
+        self.assertEqual(expect, self.api.calls)
+        self.assertDictEqual(fakes.VERSION1_DETAIL,
+                             product.to_dict())
+
+    def test_products_get_none(self):
+        name = 'none'
+        product = self.mgr.get(name)
+        expect = [
+            ('GET', '/v1/products/' + name, {}, None),
+        ]
+        self.assertEqual(expect, self.api.calls)
+        self.assertIsNone(product)
+
+    def test_create(self):
+        product = self.mgr.create(**fakes.CREATE_PRODUCT)
+        expect = [
+            ('POST', '/v1/products', {}, fakes.CREATE_PRODUCT),
         ]
         self.assertEqual(expect, self.api.calls)
         self.assertTrue(product)
-        self.assertEqual(product.name, CREATE_PRODUCT['name'])
+        self.assertEqual(product.name, fakes.CREATE_PRODUCT['name'])
 
     def test_create_invalid(self):
         self.assertRaises(exc.InvalidAttribute, self.mgr.create, foo='bar')

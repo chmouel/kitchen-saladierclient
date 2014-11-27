@@ -13,12 +13,20 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 
-PRODUCTS_FIELDS = ['name', 'id', 'contact', 'team']
-PRODUCTS_FIELDS_LABELS = ['name', 'ID', 'Contact', 'Team']
+from saladierclient.common import base
+from saladierclient import exc
 
-VERSION_FIELDS = ['version', 'location', 'provider']
-VERSION_FIELDS_LABELS = ['Version', 'Location', 'ServiceProvider']
+CREATION_ATTRIBUTES = ['product_id', 'url', 'version']
 
-PLATFORMS_FIELDS = ['name', 'tenant_id', 'location', 'contact']
-PLATFORMS_FIELDS_LABELS = ['Platform Name', 'TenantID', 'Location',
-                           'Platform Contact']
+
+class ProductVersionManager(base.Manager):
+    _path = '/v1/versions'
+
+    def create(self, **kwargs):
+        new = {}
+        for (key, value) in kwargs.items():
+            if key in CREATION_ATTRIBUTES:
+                new[key] = value
+            else:
+                raise exc.InvalidAttribute(key)
+        return self._create(self._path, new)

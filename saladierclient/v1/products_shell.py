@@ -22,9 +22,6 @@ def do_product_list(cc, args):
     field_labels = res_fields.PRODUCTS_FIELDS_LABELS
     products = cc.products.list()
 
-    for x in products:
-        x.versions = ",".join(x.versions)
-
     cliutils.print_list(products, fields,
                         field_labels=field_labels)
 
@@ -47,3 +44,33 @@ def do_product_create(cc, args):
         team=args.team)
     # TODO(chmou): We'l need something better than that in the future
     print("CREATED")
+
+
+@cliutils.arg('name',
+              metavar='<product_name>',
+              help="Product Name")
+@cliutils.arg(
+    '-v',  # TODO(chmou): rename to --version, stupid  apiclient is buggy atm
+    metavar='<version>',
+    help='Show only this version.')
+def do_product_show(cc, args):
+    """Show product information."""
+    product = cc.products.get(args.name, version=args.v)
+
+    # TODO(chmou): Separate the logic between product_show_version and
+    # product_show in two different function to not have this function becoming
+    # a spaghetti code.
+    if args.v:
+        ret = product.to_dict()
+        cliutils.print_dict(ret, wrap=72)
+        return
+
+    versions = "\n".join(["%s:%s" % (v['version'], v['id'])
+                         for v in product.versions])
+
+    ret = dict(
+        product_name=args.name,
+        team=product.team,
+        Contact=product.contact,
+        versions=versions)
+    cliutils.print_dict(ret, wrap=72)

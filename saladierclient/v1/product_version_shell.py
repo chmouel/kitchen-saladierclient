@@ -12,13 +12,24 @@
 # WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 # License for the specific language governing permissions and limitations
 # under the License.
+from saladierclient.openstack.common import cliutils
 
-PRODUCTS_FIELDS = ['name', 'id', 'contact', 'team']
-PRODUCTS_FIELDS_LABELS = ['name', 'ID', 'Contact', 'Team']
 
-VERSION_FIELDS = ['version', 'location', 'provider']
-VERSION_FIELDS_LABELS = ['Version', 'Location', 'ServiceProvider']
-
-PLATFORMS_FIELDS = ['name', 'tenant_id', 'location', 'contact']
-PLATFORMS_FIELDS_LABELS = ['Platform Name', 'TenantID', 'Location',
-                           'Platform Contact']
+@cliutils.arg('product', metavar='<id>',
+              help="Product ID")
+@cliutils.arg(
+    'url',
+    metavar='<url>',
+    help='Product version URL.')
+@cliutils.arg(
+    'version',
+    metavar='<version>',
+    help='Version number.')
+def do_product_versions_create(cc, args):
+    """Create a product version association."""
+    cc.product_versions.create(
+        product_id=args.product,
+        url=args.url,
+        version=args.version)
+    # TODO(chmou): We'l need something better than that in the future
+    print("CREATED")
