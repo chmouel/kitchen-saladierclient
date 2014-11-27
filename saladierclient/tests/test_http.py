@@ -96,7 +96,7 @@ class HttpClientTest(utils.BaseTestCase):
     def test_server_exception_msg_and_traceback(self):
         error_msg = 'another test error'
         error_trace = ("\"Traceback (most recent call last):\\n\\n  "
-                      "File \\\"/usr/local/lib/python2.7/...")
+                       "File \\\"/usr/local/lib/python2.7/...")
         error_body = self._get_error_body(error_msg, error_trace)
         fake_resp = utils.FakeResponse({'content-type': 'application/json'},
                                        six.StringIO(error_body),

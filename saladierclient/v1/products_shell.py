@@ -16,26 +16,11 @@ from saladierclient.openstack.common import cliutils
 import saladierclient.v1.res_fields as res_fields
 
 
-class Product(object):
-    def __init__(self, name, versions):
-        self.name = name
-        self.versions = versions
-
-
 def do_products_list(cc, args):
     """List products which are registered with the Saladier service."""
     fields = res_fields.PRODUCTS_FIELDS
     field_labels = res_fields.PRODUCTS_FIELDS_LABELS
     products = cc.products.list()
 
-    # NOTE(chmou): this is hack cause we don't come back with the
-    # standard output expected by apiclient
-    dct = products[0].to_dict()
-    ret = []
-    for k in dct:
-        versions = ", ".join(dct[k])
-        ret.append(Product(k, versions))
-
-    cliutils.print_list(ret, fields,
-                        field_labels=field_labels,
-                        sortby_index=None)
+    cliutils.print_list(products, fields,
+                        field_labels=field_labels)

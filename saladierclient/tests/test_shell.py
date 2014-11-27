@@ -104,11 +104,11 @@ class ShellTest(utils.BaseTestCase):
 
     def test_help_on_subcommand(self):
         required = [
-            '.*?^usage: saladier chassis-show',
-            ".*?^Show a chassis",
+            '.*?^usage: saladier products-list',
+            ".*?^List products",
         ]
         argstrings = [
-            'help chassis-show',
+            'help products-list',
         ]
         for argstr in argstrings:
             help_text = self.shell(argstr)
@@ -160,11 +160,8 @@ class ShellTest(utils.BaseTestCase):
         stdout = self.shell('bash-completion')
         # just check we have some output
         required = [
-            '.*--driver_info',
-            '.*--chassis_uuid',
             '.*help',
-            '.*node-create',
-            '.*chassis-create']
+            '.*products-list']
         for r in required:
             self.assertThat(stdout,
                             matchers.MatchesRegex(r, self.re_options))
@@ -246,34 +243,12 @@ class ShellTestNoMox(TestCase):
         return out
 
     @httpretty.activate
-    def test_node_list(self):
+    def test_products_list(self):
         self.register_keystone_auth_fixture()
-        resp_dict = {"nodes": [
-                     {"instance_uuid": "null",
-                      "uuid": "351a82d6-9f04-4c36-b79a-a38b9e98ff71",
-                      "links": [{"href": "http://saladier.example.com:8777/"
-                                 "v1/nodes/foo",
-                                 "rel": "self"},
-                                {"href": "http://saladier.example.com:8777/"
-                                 "nodes/foo",
-                                 "rel": "bookmark"}],
-                      "maintenance": "false",
-                      "provision_state": "null",
-                      "power_state": "power off"},
-                     {"instance_uuid": "null",
-                      "uuid": "66fbba13-29e8-4b8a-9e80-c655096a40d3",
-                      "links": [{"href": "http://saladier.example.com:8777/"
-                                 "v1/nodes/foo2",
-                                 "rel": "self"},
-                                {"href": "http://saladier.example.com:8777/"
-                                 "nodes/foo2",
-                                 "rel": "bookmark"}],
-                      "maintenance": "false",
-                      "provision_state": "null",
-                      "power_state": "power off"}]}
+        resp_dict = {"products": {"product1": ["1.0"]}}
         httpretty.register_uri(
             httpretty.GET,
-            'http://saladier.example.com/v1/nodes',
+            'http://saladier.example.com/v1/products',
             status=200,
             content_type='application/json; charset=UTF-8',
             body=json.dumps(resp_dict))
@@ -281,10 +256,9 @@ class ShellTestNoMox(TestCase):
         event_list_text = self.shell('products-list')
 
         required = [
-            '351a82d6-9f04-4c36-b79a-a38b9e98ff71',
-            '66fbba13-29e8-4b8a-9e80-c655096a40d3',
+            'product1',
+            '1.0',
         ]
-
         for r in required:
             self.assertRegexpMatches(event_list_text, r)
 

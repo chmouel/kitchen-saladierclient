@@ -14,7 +14,7 @@
 
 import fixtures
 
-from saladierclient.client import get_client
+import saladierclient.client as scl
 from saladierclient import exc
 from saladierclient.tests import utils
 
@@ -32,7 +32,7 @@ class ClientTest(utils.BaseTestCase):
             'saladier_url': 'http://saladier.example.org:8777/',
             'os_auth_token': 'USER_AUTH_TOKEN',
         }
-        client = get_client('1', **kwargs)
+        client = scl.get_client('1', **kwargs)
 
         self.assertEqual('USER_AUTH_TOKEN', client.http_client.auth_token)
         self.assertEqual('http://saladier.example.org:8777/',
@@ -48,7 +48,7 @@ class ClientTest(utils.BaseTestCase):
             'os_auth_url': 'http://localhost:35357/v2.0',
             'os_auth_token': '',
         }
-        client = get_client('1', **kwargs)
+        client = scl.get_client('1', **kwargs)
 
         self.assertEqual('KSCLIENT_AUTH_TOKEN', client.http_client.auth_token)
         self.assertEqual('http://localhost:6385/v1/f14b41234',
@@ -67,7 +67,7 @@ class ClientTest(utils.BaseTestCase):
             'os_auth_url': 'http://localhost:35357/v2.0',
             'os_auth_token': '',
         }
-        client = get_client('1', **kwargs)
+        client = scl.get_client('1', **kwargs)
 
         self.assertEqual('KSCLIENT_AUTH_TOKEN', client.http_client.auth_token)
         self.assertEqual('http://regionhost:6385/v1/f14b41234',
@@ -85,7 +85,7 @@ class ClientTest(utils.BaseTestCase):
             'os_auth_url': 'http://localhost:35357/v2.0',
             'os_auth_token': 'USER_AUTH_TOKEN',
         }
-        client = get_client('1', **kwargs)
+        client = scl.get_client('1', **kwargs)
 
         self.assertEqual('USER_AUTH_TOKEN', client.http_client.auth_token)
         self.assertEqual('http://localhost:6385/v1/f14b41234',
@@ -104,7 +104,7 @@ class ClientTest(utils.BaseTestCase):
             'os_region_name': 'REGIONONE',
             'os_auth_token': 'USER_AUTH_TOKEN',
         }
-        client = get_client('1', **kwargs)
+        client = scl.get_client('1', **kwargs)
 
         self.assertEqual('USER_AUTH_TOKEN', client.http_client.auth_token)
         self.assertEqual('http://regionhost:6385/v1/f14b41234',
@@ -122,9 +122,11 @@ class ClientTest(utils.BaseTestCase):
             'os_auth_url': '',
             'os_auth_token': '',
         }
-        self.assertRaises(exc.AmbiguousAuthSystem, get_client, '1', **kwargs)
+        self.assertRaises(exc.AmbiguousAuthSystem,
+                          scl.get_client, '1', **kwargs)
         # test the alias as well to ensure backwards compatibility
-        self.assertRaises(exc.AmbigiousAuthSystem, get_client, '1', **kwargs)
+        self.assertRaises(exc.AmbigiousAuthSystem,
+                          scl.get_client, '1', **kwargs)
 
     def test_ensure_auth_ref_propagated(self):
         ksclient = fake_get_ksclient
@@ -137,6 +139,6 @@ class ClientTest(utils.BaseTestCase):
             'os_auth_url': 'http://localhost:35357/v2.0',
             'os_auth_token': '',
         }
-        client = get_client('1', **kwargs)
+        client = scl.get_client('1', **kwargs)
 
         self.assertEqual(ksclient().auth_ref, client.http_client.auth_ref)

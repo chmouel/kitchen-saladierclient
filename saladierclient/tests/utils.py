@@ -108,6 +108,6 @@ class FakeKeystone():
         self.auth_token = auth_token
         self.auth_ref = {
             'token': {'expires': FakeKeystone.timestamp.strftime(
-                          '%Y-%m-%dT%H:%M:%S.%f'),
-                      'id': 'd1a541311782870742235'}
+                '%Y-%m-%dT%H:%M:%S.%f'),
+                'id': 'd1a541311782870742235'}
         }

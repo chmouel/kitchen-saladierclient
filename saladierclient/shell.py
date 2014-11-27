@@ -34,7 +34,7 @@ import six.moves.urllib.parse as urlparse
 
 
 import saladierclient
-from saladierclient import client as iroclient
+from saladierclient import client as salclient
 from saladierclient.common import utils
 from saladierclient import exc
 from saladierclient.openstack.common import cliutils
@@ -454,7 +454,7 @@ class SaladierShell(object):
                 'username': args.os_username,
                 'password': args.os_password,
             }
-        client = iroclient.Client(api_version, endpoint, **kwargs)
+        client = salclient.Client(api_version, endpoint, **kwargs)
 
         try:
             args.func(client, args)

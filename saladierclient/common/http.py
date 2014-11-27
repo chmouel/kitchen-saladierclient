@@ -231,8 +231,8 @@ class VerifiedHTTPSConnection(six.moves.http_client.HTTPSConnection):
     def __init__(self, host, port, key_file=None, cert_file=None,
                  ca_file=None, timeout=None, insecure=False):
         six.moves.http_client.HTTPSConnection.__init__(self, host, port,
-                                             key_file=key_file,
-                                             cert_file=cert_file)
+                                                       key_file=key_file,
+                                                       cert_file=cert_file)
         self.key_file = key_file
         self.cert_file = cert_file
         if ca_file is not None:

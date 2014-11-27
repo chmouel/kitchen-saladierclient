@@ -22,13 +22,28 @@ class Products(base.Resource):
         return "<Products %s>" % self._info
 
 
+class Product(object):
+    def __init__(self, name, versions):
+        self.name = name
+        self.versions = versions
+
+
 class ProductsManager(base.Manager):
     resource_class = Products
 
     @staticmethod
     def _path(product_name=None):
-        return 'products/%s' % id if product_name else 'products'
+        return '/v1/products/%s' % id if product_name else '/v1/products'
 
     def list(self):
         """Retrieve a list of products."""
-        return self._list(self._path(''), "products")
+        ret = []
+        products = self._list(self._path(''), "products")
+
+        # NOTE(chmou): this is hack cause we don't come back with the
+        # standard output expected by apiclient
+        if products:
+            dct = products[0].to_dict()
+            for k in dct:
+                ret.append(Product(k, dct[k]))
+        return ret
