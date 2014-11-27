@@ -14,6 +14,7 @@
 # under the License.
 import testtools
 
+from saladierclient import exc
 from saladierclient.tests import utils
 import saladierclient.v1.products
 
@@ -22,12 +23,20 @@ PRODUCT = {
     "product2": ["1.1", "1.0"],
 }
 
+CREATE_PRODUCT = {'contact': "blah@blah.com",
+                  'name': 'product1',
+                  'team': 'thebestone'}
+
 fake_responses = {
     '/v1/products':
     {
         'GET': (
             {},
             {"products": [PRODUCT]},
+        ),
+        'POST': (
+            {},
+            CREATE_PRODUCT,
         ),
     },
 }
@@ -47,3 +56,15 @@ class ProductsTest(testtools.TestCase):
         ]
         self.assertEqual(expect, self.api.calls)
         self.assertEqual(2, len(products))
+
+    def test_create(self):
+        product = self.mgr.create(**CREATE_PRODUCT)
+        expect = [
+            ('POST', '/v1/products', {}, CREATE_PRODUCT),
+        ]
+        self.assertEqual(expect, self.api.calls)
+        self.assertTrue(product)
+        self.assertEqual(product.name, CREATE_PRODUCT['name'])
+
+    def test_create_invalid(self):
+        self.assertRaises(exc.InvalidAttribute, self.mgr.create, foo='bar')

@@ -15,6 +15,9 @@
 #    under the License.
 
 from saladierclient.common import base
+from saladierclient import exc
+
+CREATION_ATTRIBUTES = ['team', 'name', 'contact']
 
 
 class Products(base.Resource):
@@ -47,3 +50,12 @@ class ProductsManager(base.Manager):
             for k in dct:
                 ret.append(Product(k, dct[k]))
         return ret
+
+    def create(self, **kwargs):
+        new = {}
+        for (key, value) in kwargs.items():
+            if key in CREATION_ATTRIBUTES:
+                new[key] = value
+            else:
+                raise exc.InvalidAttribute()
+        return self._create(self._path(), new)

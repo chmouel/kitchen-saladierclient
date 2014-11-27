@@ -16,7 +16,7 @@ from saladierclient.openstack.common import cliutils
 import saladierclient.v1.res_fields as res_fields
 
 
-def do_products_list(cc, args):
+def do_product_list(cc, args):
     """List products which are registered with the Saladier service."""
     fields = res_fields.PRODUCTS_FIELDS
     field_labels = res_fields.PRODUCTS_FIELDS_LABELS
@@ -24,3 +24,23 @@ def do_products_list(cc, args):
 
     cliutils.print_list(products, fields,
                         field_labels=field_labels)
+
+
+@cliutils.arg('name',
+              metavar='<name>',
+              help="Product Name")
+@cliutils.arg(
+    'team',
+    metavar='<team>',
+    help='Team name taking care of this product.')
+@cliutils.arg(
+    'contact',
+    metavar='<contact>',
+    help='Email contact of the team.')
+def do_product_create(cc, args):
+    cc.products.create(
+        contact=args.contact,
+        name=args.name,
+        team=args.team)
+    # TODO(chmou): We'l need something better than that in the future
+    print("CREATED")

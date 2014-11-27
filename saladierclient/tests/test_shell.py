@@ -104,11 +104,11 @@ class ShellTest(utils.BaseTestCase):
 
     def test_help_on_subcommand(self):
         required = [
-            '.*?^usage: saladier products-list',
+            '.*?^usage: saladier product-list',
             ".*?^List products",
         ]
         argstrings = [
-            'help products-list',
+            'help product-list',
         ]
         for argstr in argstrings:
             help_text = self.shell(argstr)
@@ -126,7 +126,7 @@ class ShellTest(utils.BaseTestCase):
         self.make_env(exclude='OS_PASSWORD')
         # We will get a Connection Refused because there is no keystone.
         self.assertRaises(keystone_exc.ConnectionRefused,
-                          self.shell, 'products-list')
+                          self.shell, 'product-list')
         # Make sure we are actually prompted.
         mock_getpass.assert_called_with('OpenStack Password: ')
 
@@ -136,7 +136,7 @@ class ShellTest(utils.BaseTestCase):
         self.make_env(exclude='OS_PASSWORD')
         # We should get Command Error because we mock Ctl-D.
         self.assertRaises(exc.CommandError,
-                          self.shell, 'products-list')
+                          self.shell, 'product-list')
         # Make sure we are actually prompted.
         mock_getpass.assert_called_with('OpenStack Password: ')
 
@@ -150,7 +150,7 @@ class ShellTest(utils.BaseTestCase):
                     ' or prompted response',)
         self.make_env(exclude='OS_PASSWORD')
         try:
-            self.shell('products-list')
+            self.shell('product-list')
         except exc.CommandError as message:
             self.assertEqual(required, message.args)
         else:
@@ -161,7 +161,7 @@ class ShellTest(utils.BaseTestCase):
         # just check we have some output
         required = [
             '.*help',
-            '.*products-list']
+            '.*product-list']
         for r in required:
             self.assertThat(stdout,
                             matchers.MatchesRegex(r, self.re_options))
@@ -253,7 +253,7 @@ class ShellTestNoMox(TestCase):
             content_type='application/json; charset=UTF-8',
             body=json.dumps(resp_dict))
 
-        event_list_text = self.shell('products-list')
+        event_list_text = self.shell('product-list')
 
         required = [
             'product1',
