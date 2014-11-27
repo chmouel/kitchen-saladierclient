@@ -22,6 +22,9 @@ def do_product_list(cc, args):
     field_labels = res_fields.PRODUCTS_FIELDS_LABELS
     products = cc.products.list()
 
+    for x in products:
+        x.versions = ",".join(x.versions)
+
     cliutils.print_list(products, fields,
                         field_labels=field_labels)
 
