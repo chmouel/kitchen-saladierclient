@@ -1,0 +1,7 @@
+[run]
+branch = True
+source = saladierclient
+omit = saladierclient/tests/*,saladierclient/openstack/*
+
+[report]
+ignore-errors = True
