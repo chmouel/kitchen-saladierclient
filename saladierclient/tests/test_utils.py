@@ -22,52 +22,6 @@ from saladierclient import exc
 from saladierclient.tests import utils as test_utils
 
 
-class UtilsTest(test_utils.BaseTestCase):
-    def test_args_array_to_dict(self):
-        my_args = {
-            'matching_metadata': ['metadata.key=metadata_value'],
-            'other': 'value'
-        }
-        cleaned_dict = utils.args_array_to_dict(my_args,
-                                                "matching_metadata")
-        self.assertEqual({
-            'matching_metadata': {'metadata.key': 'metadata_value'},
-            'other': 'value'
-        }, cleaned_dict)
-
-    def test_args_array_to_patch(self):
-        my_args = {
-            'attributes': ['foo=bar', '/extra/bar=baz'],
-            'op': 'add',
-        }
-        patch = utils.args_array_to_patch(my_args['op'],
-                                          my_args['attributes'])
-        self.assertEqual([{'op': 'add',
-                           'value': 'bar',
-                           'path': '/foo'},
-                          {'op': 'add',
-                           'value': 'baz',
-                           'path': '/extra/bar'}], patch)
-
-    def test_args_array_to_patch_format_error(self):
-        my_args = {
-            'attributes': ['foobar'],
-            'op': 'add',
-        }
-        self.assertRaises(exc.CommandError, utils.args_array_to_patch,
-                          my_args['op'], my_args['attributes'])
-
-    def test_args_array_to_patch_remove(self):
-        my_args = {
-            'attributes': ['/foo', 'extra/bar'],
-            'op': 'remove',
-        }
-        patch = utils.args_array_to_patch(my_args['op'],
-                                          my_args['attributes'])
-        self.assertEqual([{'op': 'remove', 'path': '/foo'},
-                          {'op': 'remove', 'path': '/extra/bar'}], patch)
-
-
 class CommonParamsForListTest(test_utils.BaseTestCase):
     def setUp(self):
         super(CommonParamsForListTest, self).setUp()

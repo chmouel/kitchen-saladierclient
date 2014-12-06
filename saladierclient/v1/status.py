@@ -43,3 +43,6 @@ class StatusManager(base.Manager):
     def get(self, platform_id, product_version_id):
         path = "%s/%s" % (platform_id, product_version_id)
         return self._list(self._path(path))[0]
+
+    def update(self, patch):
+        return self._update(self._path(), patch)

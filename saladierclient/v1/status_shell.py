@@ -43,3 +43,34 @@ def do_status_show(cc, args):
     data = dict([(f, getattr(status, f, ''))
                  for f in res_fields.STATUS_FIELDS])
     cliutils.print_dict(data, wrap=72)
+
+
+@cliutils.arg('platform_id', metavar='<platform_id>',
+              help="Platform ID")
+@cliutils.arg('product_version_id', metavar='<product_version_id>',
+              help="Product Version ID")
+@cliutils.arg(
+    'attributes',
+    metavar='<path=value>',
+    nargs='+',
+    action='append',
+    default=[],
+    help="Attributes to add/replace or remove "
+         "(only PATH is necessary on remove)")
+def do_status_update(cc, args):
+    """Update a status."""
+
+    old = cc.status.get(args.platform_id, args.product_version_id)
+    old_dict = old.to_dict()
+    new_dict = old_dict.copy()
+    new_dict.update(dict([x.split("=") for x in args.attributes[0]]))
+
+    # TODO(chmou): detect if there was an update to do,
+    cc.status.update(new_dict)
+
+    # TODO(chmou): we need to have a redirect on PUT to show the newly changed
+    # resource
+    status = cc.status.get(args.platform_id, args.product_version_id)
+    data = dict([(f, getattr(status, f, ''))
+                 for f in res_fields.STATUS_FIELDS])
+    cliutils.print_dict(data, wrap=72)

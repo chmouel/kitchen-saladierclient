@@ -126,7 +126,7 @@ class Manager(object):
         data = self._format_body_data(body, response_key)
         return [obj_class(self, res, loaded=True) for res in data if res]
 
-    def _update(self, url, body, method='PATCH', response_key=None):
+    def _update(self, url, body, method='PUT', response_key=None):
         resp, body = self.api.json_request(method, url, body=body)
         # PATCH/PUT requests may not return a body
         if body:

@@ -413,6 +413,11 @@ class ShellTestNoMox(TestCase):
         for r in fakes.CREATE_STATUS_PRODUCT1.values():
             self.assertRegexpMatches(text, r)
 
+    @httpretty.activate
+    def test_status_update(self):
+        # NOTE(chmou): I need to figure out hwo to do this properly
+        pass
+
 
 class ShellTestNoMoxV3(ShellTestNoMox):
 

@@ -71,41 +71,6 @@ def import_versioned_module(version, submodule=None):
     return importutils.import_module(module)
 
 
-def args_array_to_dict(kwargs, key_to_convert):
-    values_to_convert = kwargs.get(key_to_convert)
-    if values_to_convert:
-        try:
-            kwargs[key_to_convert] = dict(v.split("=", 1)
-                                          for v in values_to_convert)
-        except ValueError:
-            raise exc.CommandError(
-                '%(key)s must be a list of KEY=VALUE not "%(values)s"' %
-                {'key': key_to_convert, 'values': values_to_convert})
-    return kwargs
-
-
-def args_array_to_patch(op, attributes):
-    patch = []
-    for attr in attributes:
-        # Sanitize
-        if not attr.startswith('/'):
-            attr = '/' + attr
-
-        if op in ['add', 'replace']:
-            try:
-                path, value = attr.split("=", 1)
-                patch.append({'op': op, 'path': path, 'value': value})
-            except ValueError:
-                raise exc.CommandError('Attributes must be a list of '
-                                       'PATH=VALUE not "%s"' % attr)
-        elif op == "remove":
-            # For remove only the key is needed
-            patch.append({'op': op, 'path': attr})
-        else:
-            raise exc.CommandError('Unknown PATCH operation: %s' % op)
-    return patch
-
-
 def common_params_for_list(args, fields, field_labels):
     """Generate 'params' dict that is common for every 'list' command.
 

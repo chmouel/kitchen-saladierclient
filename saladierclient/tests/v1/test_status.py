@@ -26,6 +26,10 @@ fake_responses = {
             {},
             fakes.CREATE_STATUS_PRODUCT1,
         ),
+        'PUT': (
+            {},
+            fakes.CREATE_STATUS_PRODUCT1,
+        )
     },
     '/v1/status/PLATFORM_ID/PRODUCT_ID':
     {
@@ -33,7 +37,7 @@ fake_responses = {
             {},
             fakes.CREATE_STATUS_PRODUCT1,
         )
-    }
+    },
 }
 
 
@@ -72,3 +76,19 @@ class StatusTest(testtools.TestCase):
 
     def test_create_invalid(self):
         self.assertRaises(exc.InvalidAttribute, self.mgr.create, foo='bar')
+
+    def test_update(self):
+        url = '/v1/status'
+
+        new_dict = fakes.CREATE_STATUS_PRODUCT1.copy()
+        new_dict['status'] = 'NOT_TESTED'
+        status = self.mgr.update(new_dict)
+        # NOTE(chmou): I don't like modifying globals like that :( and mock is
+        # even uglier.
+        fakes.CREATE_STATUS_PRODUCT1['status'] = new_dict['status']
+
+        expect = [
+            ('PUT', url, {}, new_dict),
+        ]
+        self.assertEqual(expect, self.api.calls)
+        self.assertDictEqual(new_dict, status.to_dict())
