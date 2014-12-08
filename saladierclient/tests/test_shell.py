@@ -332,10 +332,10 @@ class ShellTestNoMox(TestCase):
             'http://saladier.example.com/',
             status=201,
             content_type='application/json; charset=UTF-8',
-            body=json.dumps(fakes.SERVER_VERSION_INFO))
+            body=json.dumps(fakes.SERVER_INFO))
 
-        text = self.shell('version')
-        for r in fakes.SERVER_VERSION_INFO.values():
+        text = self.shell('server-info')
+        for r in fakes.SERVER_INFO.values():
             self.assertRegexpMatches(text, r)
 
     @httpretty.activate

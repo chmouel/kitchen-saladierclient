@@ -16,13 +16,13 @@
 from saladierclient.common import base
 
 
-class Version(base.Resource):
+class ServerInfo(base.Resource):
     def __repr__(self):
-        return "<Version %s>" % self._info
+        return "<ServerInfo %s>" % self._info
 
 
-class VersionManager(base.Manager):
-    resource_class = Version
+class ServerInfoManager(base.Manager):
+    resource_class = ServerInfo
     _path = '/'
 
     def list(self, **kwargs):

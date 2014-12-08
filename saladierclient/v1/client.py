@@ -19,8 +19,8 @@ from saladierclient.common import http
 from saladierclient.v1 import platforms
 from saladierclient.v1 import product_version
 from saladierclient.v1 import products
+from saladierclient.v1 import server_info
 from saladierclient.v1 import subscriptions
-from saladierclient.v1 import version
 
 
 class Client(object):
@@ -36,7 +36,7 @@ class Client(object):
     def __init__(self, *args, **kwargs):
         """Initialize a new client for the Saladier v1 API."""
         self.http_client = http._construct_http_client(*args, **kwargs)
-        self.version = version.VersionManager(self.http_client)
+        self.server_info = server_info.ServerInfoManager(self.http_client)
 
         self.products = products.ProductsManager(self.http_client)
         self.product_versions = product_version.ProductVersionManager(
