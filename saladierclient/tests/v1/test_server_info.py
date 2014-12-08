@@ -17,34 +17,33 @@ import testtools
 from saladierclient.tests import utils
 from saladierclient.tests.v1 import fakes
 import saladierclient.v1.products
-import saladierclient.v1.version
+import saladierclient.v1.server_info
 
 fake_responses = {
     '/':
     {
         'GET': (
             {},
-            fakes.SERVER_VERSION_INFO,
+            fakes.SERVER_INFO,
         ),
     },
 }
 
 
-class VersionTest(testtools.TestCase):
+class ServerInfoTest(testtools.TestCase):
 
     def setUp(self):
-        super(VersionTest, self).setUp()
+        super(ServerInfoTest, self).setUp()
         self.api = utils.FakeAPI(fake_responses)
-        self.mgr = saladierclient.v1.version.VersionManager(self.api)
+        self.mgr = saladierclient.v1.server_info.ServerInfoManager(self.api)
 
-    def test_version_show(self):
+    def test_server_info_show(self):
         version = self.mgr.list()
         expect = [
             ('GET', '/', {}, None),
         ]
         self.assertEqual(expect, self.api.calls)
-        self.assertDictEqual(fakes.SERVER_VERSION_INFO,
+        self.assertDictEqual(fakes.SERVER_INFO,
                              version.to_dict())
-        self.assertIs(saladierclient.v1.version.Version,
+        self.assertIs(saladierclient.v1.server_info.ServerInfo,
                       type(version))
-        self.assertRegexpMatches(repr(version), "Version")

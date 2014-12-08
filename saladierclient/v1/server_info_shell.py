@@ -16,9 +16,9 @@ from saladierclient.openstack.common import cliutils
 import saladierclient.v1.res_fields as res_fields
 
 
-def do_version(cc, args):
+def do_server_info(cc, args):
     """Show saladier version and info."""
-    version = [cc.version.list()]
-    fields = res_fields.VERSION_FIELDS
-    field_labels = res_fields.VERSION_FIELDS_LABELS
+    version = [cc.server_info.list()]
+    fields = res_fields.SERVER_INFO_FIELDS
+    field_labels = res_fields.SERVER_INFO_LABELS
     cliutils.print_list(version, fields, field_labels=field_labels)

@@ -59,7 +59,7 @@ PRODUCTS_LIST = {'products':
                  [PRODUCT1_DETAIL,
                   PRODUCT2_DETAIL]}
 
-SERVER_VERSION_INFO = {
+SERVER_INFO = {
     'version': '0.0.1',
     'location': 'Paris',
     'provider': 'Tinrlopopin'

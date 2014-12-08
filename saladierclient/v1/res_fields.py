@@ -16,8 +16,8 @@
 PRODUCTS_FIELDS = ['name', 'id', 'contact', 'team']
 PRODUCTS_FIELDS_LABELS = ['name', 'ID', 'Contact', 'Team']
 
-VERSION_FIELDS = ['version', 'location', 'provider']
-VERSION_FIELDS_LABELS = ['Version', 'Location', 'ServiceProvider']
+SERVER_INFO_FIELDS = ['version', 'location', 'provider']
+SERVER_INFO_LABELS = ['Version', 'Location', 'ServiceProvider']
 
 PLATFORMS_FIELDS = ['name', 'tenant_id', 'location', 'contact']
 PLATFORMS_FIELDS_LABELS = ['Platform Name', 'TenantID', 'Location',
