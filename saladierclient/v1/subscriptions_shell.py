@@ -12,13 +12,15 @@
 # WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 # License for the specific language governing permissions and limitations
 # under the License.
+from saladierclient.openstack.common import cliutils
 
-PRODUCTS_FIELDS = ['name', 'id', 'contact', 'team']
-PRODUCTS_FIELDS_LABELS = ['name', 'ID', 'Contact', 'Team']
 
-VERSION_FIELDS = ['version', 'location', 'provider']
-VERSION_FIELDS_LABELS = ['Version', 'Location', 'ServiceProvider']
-
-PLATFORMS_FIELDS = ['name', 'tenant_id', 'location', 'contact']
-PLATFORMS_FIELDS_LABELS = ['Platform Name', 'TenantID', 'Location',
-                           'Platform Contact']
+@cliutils.arg('product_id', metavar='<id>', help="Product ID")
+@cliutils.arg('tenant_id', metavar='<tenant_id>',
+              help='TenantID subscribed to this product.')
+def do_subscription_create(cc, args):
+    cc.subscriptions.create(
+        product_id=args.product_id,
+        tenant_id=args.tenant_id)
+    # TODO(chmou): We'l need something better than that in the future
+    print("CREATED")

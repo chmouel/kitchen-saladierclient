@@ -13,12 +13,17 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 
-PRODUCTS_FIELDS = ['name', 'id', 'contact', 'team']
-PRODUCTS_FIELDS_LABELS = ['name', 'ID', 'Contact', 'Team']
+from saladierclient.common import base
 
-VERSION_FIELDS = ['version', 'location', 'provider']
-VERSION_FIELDS_LABELS = ['Version', 'Location', 'ServiceProvider']
 
-PLATFORMS_FIELDS = ['name', 'tenant_id', 'location', 'contact']
-PLATFORMS_FIELDS_LABELS = ['Platform Name', 'TenantID', 'Location',
-                           'Platform Contact']
+class Version(base.Resource):
+    def __repr__(self):
+        return "<Version %s>" % self._info
+
+
+class VersionManager(base.Manager):
+    resource_class = Version
+    _path = '/'
+
+    def list(self, **kwargs):
+        return self._list(self._path)[0]

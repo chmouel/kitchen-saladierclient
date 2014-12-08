@@ -12,13 +12,13 @@
 # WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 # License for the specific language governing permissions and limitations
 # under the License.
+from saladierclient.openstack.common import cliutils
+import saladierclient.v1.res_fields as res_fields
 
-PRODUCTS_FIELDS = ['name', 'id', 'contact', 'team']
-PRODUCTS_FIELDS_LABELS = ['name', 'ID', 'Contact', 'Team']
 
-VERSION_FIELDS = ['version', 'location', 'provider']
-VERSION_FIELDS_LABELS = ['Version', 'Location', 'ServiceProvider']
-
-PLATFORMS_FIELDS = ['name', 'tenant_id', 'location', 'contact']
-PLATFORMS_FIELDS_LABELS = ['Platform Name', 'TenantID', 'Location',
-                           'Platform Contact']
+def do_version(cc, args):
+    """Show saladier version and info."""
+    version = [cc.version.list()]
+    fields = res_fields.VERSION_FIELDS
+    field_labels = res_fields.VERSION_FIELDS_LABELS
+    cliutils.print_list(version, fields, field_labels=field_labels)
