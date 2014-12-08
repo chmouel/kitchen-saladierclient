@@ -59,6 +59,13 @@ PRODUCTS_LIST = {'products':
                  [PRODUCT1_DETAIL,
                   PRODUCT2_DETAIL]}
 
+PLATFORM1_DETAIL = {'tenant_id': '0123456789',
+                    'location': 'nowhere',
+                    'contact': 'platform@contact.org',
+                    'name': 'platform1',
+                    'id': 'platform1-id-id-id'}
+PLATFORMS_LIST = {'platforms': [PLATFORM1_DETAIL]}
+
 SERVER_INFO = {
     'version': '0.0.1',
     'location': 'Paris',

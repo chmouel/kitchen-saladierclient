@@ -341,19 +341,15 @@ class ShellTestNoMox(TestCase):
     @httpretty.activate
     def test_platforms_list(self):
         self.register_keystone_auth_fixture()
-        resp_dict = dict(tenant_id='',
-                         contact='name@name.org',
-                         name='Platform1',
-                         location='Nothere')
         httpretty.register_uri(
             httpretty.GET,
             'http://saladier.example.com/v1/platforms',
             status=200,
             content_type='application/json; charset=UTF-8',
-            body=json.dumps(dict(platforms=[resp_dict])))
+            body=json.dumps(fakes.PLATFORMS_LIST))
 
         text = self.shell('platforms-list')
-        for r in resp_dict.values():
+        for r in fakes.PLATFORM1_DETAIL.values():
             self.assertRegexpMatches(text, r)
 
     @httpretty.activate
