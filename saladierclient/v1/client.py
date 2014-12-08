@@ -20,6 +20,7 @@ from saladierclient.v1 import platforms
 from saladierclient.v1 import product_version
 from saladierclient.v1 import products
 from saladierclient.v1 import server_info
+from saladierclient.v1 import status
 from saladierclient.v1 import subscriptions
 
 
@@ -44,3 +45,4 @@ class Client(object):
         self.platforms = platforms.PlatformsManager(self.http_client)
         self.subscriptions = subscriptions.SubscriptionsManager(
             self.http_client)
+        self.status = status.StatusManager(self.http_client)

@@ -88,3 +88,10 @@ CREATE_PLATFORM = {'location': "Kurzistan",
 CREATE_PRODUCT_VERSIONS = {'product_id': '101010101-101001010',
                            'url': 'http://somewhereoutthere',
                            'version': '1.0'}
+
+CREATE_STATUS_PRODUCT1 = {
+    'platform_id': 'platform1-id-id-id-id',
+    'product_version_id': PRODUCT1_ID,
+    'status': "SUCCESS",
+    'logs_location': "swift://localhost/deploy_new"
+}

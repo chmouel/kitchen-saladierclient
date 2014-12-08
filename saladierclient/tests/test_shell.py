@@ -379,6 +379,20 @@ class ShellTestNoMox(TestCase):
         text = self.shell('subscription-create name tenant_id')
         self.assertRegexpMatches(text, 'CREATED')
 
+    @httpretty.activate
+    def test_status_create(self):
+        self.register_keystone_auth_fixture()
+        httpretty.register_uri(
+            httpretty.POST,
+            'http://saladier.example.com/v1/status',
+            status=201,
+            body='{}',
+            content_type='application/json; charset=UTF-8')
+
+        text = self.shell('status-create platform_id product_version_id '
+                          'SUCCESS swift://bbb')
+        self.assertRegexpMatches(text, 'CREATED')
+
 
 class ShellTestNoMoxV3(ShellTestNoMox):
 
