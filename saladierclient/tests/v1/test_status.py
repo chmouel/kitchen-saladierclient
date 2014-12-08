@@ -27,6 +27,13 @@ fake_responses = {
             fakes.CREATE_STATUS_PRODUCT1,
         ),
     },
+    '/v1/status/PLATFORM_ID/PRODUCT_ID':
+    {
+        'GET': (
+            {},
+            fakes.CREATE_STATUS_PRODUCT1,
+        )
+    }
 }
 
 
@@ -44,6 +51,23 @@ class StatusTest(testtools.TestCase):
         ]
         self.assertEqual(expect, self.api.calls)
         self.assertTrue(status)
+        self.assertDictEqual(fakes.CREATE_STATUS_PRODUCT1, status.to_dict())
+
+    def test_get(self):
+        url = '/v1/status/%s/%s' % (
+            fakes.CREATE_STATUS_PRODUCT1['platform_id'],
+            fakes.CREATE_STATUS_PRODUCT1['product_version_id'])
+
+        fake_responses[url] = (
+            fake_responses['/v1/status/PLATFORM_ID/PRODUCT_ID'])
+
+        status = self.mgr.get(
+            fakes.CREATE_STATUS_PRODUCT1['platform_id'],
+            fakes.CREATE_STATUS_PRODUCT1['product_version_id'])
+        expect = [
+            ('GET', url, {}, None),
+        ]
+        self.assertEqual(expect, self.api.calls)
         self.assertDictEqual(fakes.CREATE_STATUS_PRODUCT1, status.to_dict())
 
     def test_create_invalid(self):

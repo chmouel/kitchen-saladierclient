@@ -23,3 +23,5 @@ PLATFORMS_FIELDS = ['name', 'id', 'tenant_id', 'location', 'contact']
 PLATFORMS_FIELDS_LABELS = ['Platform Name', 'Platform ID',
                            'TenantID', 'Location',
                            'Platform Contact']
+STATUS_FIELDS = ['id', 'status', 'platform_id',
+                 'logs_location', 'product_version_id']

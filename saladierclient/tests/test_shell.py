@@ -393,6 +393,26 @@ class ShellTestNoMox(TestCase):
                           'SUCCESS swift://bbb')
         self.assertRegexpMatches(text, 'CREATED')
 
+    @httpretty.activate
+    def test_status_show(self):
+        self.register_keystone_auth_fixture()
+        url = 'http://saladier.example.com/v1/status/%s/%s' % (
+            fakes.CREATE_STATUS_PRODUCT1['platform_id'],
+            fakes.CREATE_STATUS_PRODUCT1['product_version_id'],
+        )
+        httpretty.register_uri(
+            httpretty.GET,
+            url,
+            status=201,
+            content_type='application/json; charset=UTF-8',
+            body=json.dumps(fakes.CREATE_STATUS_PRODUCT1))
+
+        text = self.shell('status-show %s %s' %
+                          (fakes.CREATE_STATUS_PRODUCT1['platform_id'],
+                           fakes.CREATE_STATUS_PRODUCT1['product_version_id']))
+        for r in fakes.CREATE_STATUS_PRODUCT1.values():
+            self.assertRegexpMatches(text, r)
+
 
 class ShellTestNoMoxV3(ShellTestNoMox):
 

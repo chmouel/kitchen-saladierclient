@@ -13,6 +13,7 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 from saladierclient.openstack.common import cliutils
+from saladierclient.v1 import res_fields
 
 
 @cliutils.arg('platform_id', metavar='<platform_id>',
@@ -29,3 +30,16 @@ def do_status_create(cc, args):
         status=args.status)
     # TODO(chmou): We'l need something better than that in the future
     print("CREATED")
+
+
+@cliutils.arg('platform_id', metavar='<platform_id>',
+              help="Platform ID")
+@cliutils.arg('product_version_id', metavar='<product_version_id>',
+              help="Product Version ID")
+def do_status_show(cc, args):
+    status = cc.status.get(
+        platform_id=args.platform_id,
+        product_version_id=args.product_version_id)
+    data = dict([(f, getattr(status, f, ''))
+                 for f in res_fields.STATUS_FIELDS])
+    cliutils.print_dict(data, wrap=72)

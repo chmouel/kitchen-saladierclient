@@ -26,7 +26,10 @@ class Status(base.Resource):
 
 class StatusManager(base.Manager):
     resource_class = Status
-    _path = '/v1/status'
+
+    @staticmethod
+    def _path(path=None):
+        return '/v1/status/' + path if path else '/v1/status'
 
     def create(self, **kwargs):
         new = {}
@@ -35,4 +38,8 @@ class StatusManager(base.Manager):
                 new[key] = value
             else:
                 raise exc.InvalidAttribute("Invalid attribute: %s" % key)
-        return self._create(self._path, new)
+        return self._create(self._path(), new)
+
+    def get(self, platform_id, product_version_id):
+        path = "%s/%s" % (platform_id, product_version_id)
+        return self._list(self._path(path))[0]
