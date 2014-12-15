@@ -36,7 +36,11 @@ fake_responses = {
         'GET': (
             {},
             fakes.CREATE_STATUS_PRODUCT1,
-        )
+        ),
+        'DELETE': (
+            {},
+            None,
+        ),
     },
 }
 
@@ -92,3 +96,16 @@ class StatusTest(testtools.TestCase):
         ]
         self.assertEqual(expect, self.api.calls)
         self.assertDictEqual(new_dict, status.to_dict())
+
+    def test_delete(self):
+        pt_id = fakes.CREATE_STATUS_PRODUCT1['platform_id']
+        pv_id = fakes.CREATE_STATUS_PRODUCT1['product_version_id']
+        url = '/v1/status/%s/%s' % (pt_id, pv_id)
+        fake_responses[url] = (
+            fake_responses['/v1/status/PLATFORM_ID/PRODUCT_ID'])
+        port = self.mgr.delete(pt_id, pv_id)
+        expect = [
+            ('DELETE', url, {}, None),
+        ]
+        self.assertEqual(expect, self.api.calls)
+        self.assertIsNone(port)
