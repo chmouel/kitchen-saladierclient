@@ -20,7 +20,9 @@ CREATION_ATTRIBUTES = ['product_id', 'tenant_id']
 
 
 class SubscriptionsManager(base.Manager):
-    path = '/v1/subscriptions'
+    @staticmethod
+    def _path(path=None):
+        return '/v1/subscriptions/' + path if path else '/v1/subscriptions'
 
     def create(self, **kwargs):
         new = {}
@@ -29,4 +31,7 @@ class SubscriptionsManager(base.Manager):
                 new[key] = value
             else:
                 raise exc.InvalidAttribute()
-        return self._create(self.path, new)
+        return self._create(self._path(), new)
+
+    def delete(self, product_id, tenant_id):
+        return self._delete(self._path(product_id + "/" + tenant_id))
