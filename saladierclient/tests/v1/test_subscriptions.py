@@ -28,6 +28,13 @@ fake_responses = {
             None,
         ),
     },
+    '/v1/subscriptions/PLATFORM_ID/TENANT_ID':
+    {
+        'DELETE': (
+            {},
+            None,
+        ),
+    },
 }
 
 
@@ -52,3 +59,18 @@ class SubscriptionsTest(testtools.TestCase):
 
     def test_create_invalid(self):
         self.assertRaises(exc.InvalidAttribute, self.mgr.create, foo='bar')
+
+    def test_delete(self):
+        pd_id = fakes.CREATE_SUBSCRIPTION['product_id']
+        tenant_id = fakes.CREATE_SUBSCRIPTION['tenant_id']
+        url = '/v1/subscriptions/%s/%s' % (pd_id, tenant_id)
+
+        fake_responses[url] = (
+            fake_responses['/v1/subscriptions/PLATFORM_ID/TENANT_ID'])
+
+        port = self.mgr.delete(pd_id, tenant_id)
+        expect = [
+            ('DELETE', url, {}, None),
+        ]
+        self.assertEqual(expect, self.api.calls)
+        self.assertIsNone(port)

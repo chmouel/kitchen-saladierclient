@@ -380,6 +380,25 @@ class ShellTestNoMox(TestCase):
         self.assertRegexpMatches(text, 'CREATED')
 
     @httpretty.activate
+    def test_subscriptions_delete(self):
+        self.register_keystone_auth_fixture()
+        url = 'http://saladier.example.com/v1/subscriptions/%s/%s' % (
+            fakes.CREATE_SUBSCRIPTION['product_id'],
+            fakes.CREATE_SUBSCRIPTION['tenant_id'],
+        )
+        httpretty.register_uri(
+            httpretty.DELETE,
+            url,
+            status=201,
+            content_type='application/json; charset=UTF-8',
+            body='{}')
+
+        text = self.shell('subscription-delete %s %s' %
+                          (fakes.CREATE_SUBSCRIPTION['product_id'],
+                           fakes.CREATE_SUBSCRIPTION['tenant_id']))
+        self.assertRegexpMatches(text, 'has been deleted')
+
+    @httpretty.activate
     def test_status_create(self):
         self.register_keystone_auth_fixture()
         httpretty.register_uri(

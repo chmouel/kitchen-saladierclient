@@ -24,3 +24,16 @@ def do_subscription_create(cc, args):
         tenant_id=args.tenant_id)
     # TODO(chmou): We'l need something better than that in the future
     print("CREATED")
+
+
+@cliutils.arg('product_id', metavar='<id>', help="Product ID")
+@cliutils.arg('tenant_id', metavar='<tenant_id>',
+              help='TenantID subscribed to this product.')
+def do_subscription_delete(cc, args):
+    cc.subscriptions.delete(
+        product_id=args.product_id,
+        tenant_id=args.tenant_id)
+    print ("Status from product_id: %s tenant_id: %s"
+           " has been deleted" % (
+               args.product_id,
+               args.tenant_id))
