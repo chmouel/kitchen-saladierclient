@@ -414,6 +414,25 @@ class ShellTestNoMox(TestCase):
             self.assertRegexpMatches(text, r)
 
     @httpretty.activate
+    def test_status_delete(self):
+        self.register_keystone_auth_fixture()
+        url = 'http://saladier.example.com/v1/status/%s/%s' % (
+            fakes.CREATE_STATUS_PRODUCT1['platform_id'],
+            fakes.CREATE_STATUS_PRODUCT1['product_version_id'],
+        )
+        httpretty.register_uri(
+            httpretty.DELETE,
+            url,
+            status=201,
+            content_type='application/json; charset=UTF-8',
+            body='{}')
+
+        text = self.shell('status-delete %s %s' %
+                          (fakes.CREATE_STATUS_PRODUCT1['platform_id'],
+                           fakes.CREATE_STATUS_PRODUCT1['product_version_id']))
+        self.assertRegexpMatches(text, 'has been deleted')
+
+    @httpretty.activate
     def test_status_update(self):
         # NOTE(chmou): I need to figure out hwo to do this properly
         pass

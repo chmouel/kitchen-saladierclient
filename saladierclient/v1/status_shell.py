@@ -74,3 +74,18 @@ def do_status_update(cc, args):
     data = dict([(f, getattr(status, f, ''))
                  for f in res_fields.STATUS_FIELDS])
     cliutils.print_dict(data, wrap=72)
+
+
+@cliutils.arg('platform_id', metavar='<platform_id>',
+              help="Platform ID")
+@cliutils.arg('product_version_id', metavar='<product_version_id>',
+              help="Product Version ID")
+def do_status_delete(cc, args):
+    """Delete a status."""
+    cc.status.delete(
+        platform_id=args.platform_id,
+        product_version_id=args.product_version_id)
+    print ("Status from platform_id: %s product_version_id: %s"
+           " has been deleted" % (
+               args.platform_id,
+               args.product_version_id))

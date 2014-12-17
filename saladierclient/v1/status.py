@@ -46,3 +46,6 @@ class StatusManager(base.Manager):
 
     def update(self, patch):
         return self._update(self._path(), patch)
+
+    def delete(self, platform_id, product_version_id):
+        return self._delete(self._path(platform_id + "/" + product_version_id))
