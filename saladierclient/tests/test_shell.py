@@ -453,8 +453,36 @@ class ShellTestNoMox(TestCase):
 
     @httpretty.activate
     def test_status_update(self):
-        # NOTE(chmou): I need to figure out hwo to do this properly
-        pass
+        self.register_keystone_auth_fixture()
+
+        url = 'http://saladier.example.com/v1/status/%s/%s' % (
+            fakes.CREATE_STATUS_PRODUCT1['platform_id'],
+            fakes.CREATE_STATUS_PRODUCT1['product_version_id'],
+        )
+
+        httpretty.register_uri(
+            httpretty.PUT,
+            'http://saladier.example.com/v1/status',
+            content_type='application/json; charset=UTF-8',
+            body='{}')
+
+        # NOTE(chmou): we can't test the update properly as httpretty url
+        # rotation does not seem to work as documented here:
+        # http://git.io/HvVzAQ and I lost too many hours on trying to debug the
+        # httpretty spaghetti code. But since we are testing the shell cnd
+        # and not the update we have a good test still. The update is tested in
+        # test_status properly.
+        httpretty.register_uri(
+            httpretty.GET, url,
+            content_type='application/json; charset=UTF-8',
+            body=json.dumps(fakes.CREATE_STATUS_PRODUCT1),
+        )
+        text = self.shell('status-update %s %s status=NOT_TESTED' %
+                          (fakes.CREATE_STATUS_PRODUCT1['platform_id'],
+                           fakes.CREATE_STATUS_PRODUCT1['product_version_id']))
+
+        for r in fakes.CREATE_STATUS_PRODUCT1.values():
+            self.assertRegexpMatches(text, r)
 
 
 class ShellTestNoMoxV3(ShellTestNoMox):
