@@ -33,3 +33,18 @@ def do_product_versions_create(cc, args):
         version=args.version)
     # TODO(chmou): We'l need something better than that in the future
     print("CREATED")
+
+
+@cliutils.arg('product_id', metavar='<product_id>',
+              help="Product ID")
+@cliutils.arg('version', metavar='<version>',
+              help="Version string")
+def do_product_versions_delete(cc, args):
+    """Delete a product version association."""
+    cc.product_versions.delete(
+        product_id=args.product_id,
+        version=args.version)
+    print ("Product version product_id: %s version: %s"
+           " has been deleted" % (
+               args.product_id,
+               args.version))

@@ -20,7 +20,9 @@ CREATION_ATTRIBUTES = ['product_id', 'url', 'version']
 
 
 class ProductVersionManager(base.Manager):
-    _path = '/v1/versions'
+    @staticmethod
+    def _path(path=None):
+        return '/v1/versions/' + path if path else '/v1/versions'
 
     def create(self, **kwargs):
         new = {}
@@ -29,4 +31,7 @@ class ProductVersionManager(base.Manager):
                 new[key] = value
             else:
                 raise exc.InvalidAttribute(key)
-        return self._create(self._path, new)
+        return self._create(self._path(), new)
+
+    def delete(self, product_id, version):
+        return self._delete(self._path(product_id + "/" + version))

@@ -27,6 +27,13 @@ fake_responses = {
             None,
         ),
     },
+    '/v1/versions/PRODUCT_ID/VERSION':
+    {
+        'DELETE': (
+            {},
+            None,
+        ),
+    },
 }
 
 
@@ -48,3 +55,17 @@ class ProductsTest(testtools.TestCase):
 
     def test_create_invalid(self):
         self.assertRaises(exc.InvalidAttribute, self.mgr.create, foo='bar')
+
+    def test_delete(self):
+        pt_id = fakes.CREATE_PRODUCT_VERSIONS['product_id']
+        v = fakes.CREATE_PRODUCT_VERSIONS['version']
+
+        url = '/v1/versions/%s/%s' % (pt_id, v)
+        fake_responses[url] = (
+            fake_responses['/v1/versions/PRODUCT_ID/VERSION'])
+        port = self.mgr.delete(pt_id, v)
+        expect = [
+            ('DELETE', url, {}, None),
+        ]
+        self.assertEqual(expect, self.api.calls)
+        self.assertIsNone(port)
