@@ -31,6 +31,13 @@ fake_responses = {
             fakes.CREATE_PLATFORM,
         ),
     },
+    '/v1/platforms/PLATFORM_ID':
+    {
+        'DELETE': (
+            {},
+            None,
+        ),
+    },
 }
 
 
@@ -65,3 +72,14 @@ class PlatformsTest(testtools.TestCase):
 
     def test_create_invalid(self):
         self.assertRaises(exc.InvalidAttribute, self.mgr.create, foo='bar')
+
+    def test_delete(self):
+        url = '/v1/platforms/%s' % (fakes.PLATFORM1_DETAIL['id'])
+        fake_responses[url] = (
+            fake_responses['/v1/platforms/PLATFORM_ID'])
+        delete = self.mgr.delete(fakes.PLATFORM1_DETAIL['id'])
+        expect = [
+            ('DELETE', url, {}, None),
+        ]
+        self.assertEqual(expect, self.api.calls)
+        self.assertIsNone(delete)

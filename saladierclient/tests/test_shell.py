@@ -387,6 +387,21 @@ class ShellTestNoMox(TestCase):
             self.assertRegexpMatches(text, r)
 
     @httpretty.activate
+    def test_platforms_delete(self):
+        self.register_keystone_auth_fixture()
+        url = 'http://saladier.example.com/v1/platforms/%s' % (
+            fakes.PLATFORM1_DETAIL['id'])
+        httpretty.register_uri(
+            httpretty.DELETE,
+            url,
+            status=201,
+            content_type='application/json; charset=UTF-8',
+            body='{}')
+
+        text = self.shell('platform-delete %s' % fakes.PLATFORM1_DETAIL['id'])
+        self.assertRegexpMatches(text, 'has been deleted')
+
+    @httpretty.activate
     def test_platform_create(self):
         self.register_keystone_auth_fixture()
         httpretty.register_uri(

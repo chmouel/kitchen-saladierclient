@@ -27,8 +27,9 @@ class PlatformsManager(base.Manager):
     resource_class = Platform
 
     @staticmethod
-    def _path(product_name=None):
-        return '/v1/platforms/%s' % id if product_name else '/v1/platforms'
+    def _path(platform_id=None):
+        return ('/v1/platforms/%s' % platform_id if
+                platform_id else '/v1/platforms')
 
     def list(self):
         """Retrieve a list of platforms."""
@@ -42,3 +43,6 @@ class PlatformsManager(base.Manager):
             else:
                 raise exc.InvalidAttribute()
         return self._create(self._path(), new)
+
+    def delete(self, platform_id):
+        return self._delete(self._path(platform_id))

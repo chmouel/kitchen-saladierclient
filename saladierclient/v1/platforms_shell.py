@@ -49,3 +49,11 @@ def do_platform_create(cc, args):
         location=args.location)
     # TODO(chmou): We'l need something better than that in the future
     print("CREATED")
+
+
+@cliutils.arg('platform_id', metavar='<platform_id>',
+              help="Platform ID")
+def do_platform_delete(cc, args):
+    """Delete a status."""
+    cc.platforms.delete(args.platform_id)
+    print("Platform ID %s has been deleted" % args.platform_id)
