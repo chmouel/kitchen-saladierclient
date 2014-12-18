@@ -55,3 +55,7 @@ class ProductsManager(base.Manager):
         """Retrieve a list of products."""
         products = self._list(self._path(), "products")
         return products
+
+    def delete(self, product_id):
+        return self._delete(
+            self._path(product_id))

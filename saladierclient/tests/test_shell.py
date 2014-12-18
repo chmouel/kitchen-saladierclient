@@ -299,6 +299,21 @@ class ShellTestNoMox(TestCase):
             self.assertRegexpMatches(text, r)
 
     @httpretty.activate
+    def test_product_delete(self):
+        self.register_keystone_auth_fixture()
+        url = 'http://saladier.example.com/v1/products/%s' % (
+            fakes.PRODUCT1_NAME)
+        httpretty.register_uri(
+            httpretty.DELETE,
+            url,
+            status=201,
+            content_type='application/json; charset=UTF-8',
+            body='{}')
+
+        text = self.shell('product-delete %s' % fakes.PRODUCT1_NAME)
+        self.assertRegexpMatches(text, 'has been deleted')
+
+    @httpretty.activate
     def test_product_show_version(self):
         self.register_keystone_auth_fixture()
         httpretty.register_uri(

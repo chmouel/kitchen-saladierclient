@@ -38,6 +38,10 @@ fake_responses = {
             {},
             fakes.PRODUCT1_DETAIL,
         ),
+        'DELETE': (
+            {},
+            None,
+        ),
     },
     '/v1/products/product1/1.0':
     {
@@ -112,3 +116,13 @@ class ProductsTest(testtools.TestCase):
 
     def test_create_invalid(self):
         self.assertRaises(exc.InvalidAttribute, self.mgr.create, foo='bar')
+
+    def test_delete(self):
+        url = '/v1/products/' + fakes.PRODUCT1_NAME
+
+        delete = self.mgr.delete(fakes.PRODUCT1_NAME)
+        expect = [
+            ('DELETE', url, {}, None),
+        ]
+        self.assertEqual(expect, self.api.calls)
+        self.assertIsNone(delete)

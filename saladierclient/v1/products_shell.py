@@ -74,3 +74,12 @@ def do_product_show(cc, args):
         Contact=product.contact,
         versions=versions)
     cliutils.print_dict(ret, wrap=72)
+
+
+@cliutils.arg('product_id', metavar='<product_id>',
+              help="Product ID")
+def do_product_delete(cc, args):
+    """Delete a status."""
+    cc.products.delete(product_id=args.product_id)
+    print ("Status of product_id: %s has been deleted" %
+           args.product_id)
